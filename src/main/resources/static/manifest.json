@@ -1,0 +1,20 @@
+{
+  "name": "KDS Restaurante",
+  "short_name": "KDS",
+  "start_url": "/cocina/",
+  "display": "standalone",
+  "background_color": "#f5efe6",
+  "theme_color": "#d9a441",
+  "icons": [
+    {
+      "src": "/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

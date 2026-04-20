@@ -1,0 +1,68 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.card {
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: 0.2s ease;
+  min-height: 260px;
+}
+
+.card h2 {
+  margin-top: 0;
+  font-size: 2rem;
+}
+
+.card.pendiente {
+  background: #fff3cd;
+  color: #5f4b00;
+}
+
+.card.en-preparacion {
+  background: #ffe0b2;
+  color: #7a3f00;
+}
+
+.card.listo {
+  background: #c8e6c9;
+  color: #1b5e20;
+}
+
+.card.atrasado {
+  background: #ffcdd2;
+  color: #8b0000;
+  animation: parpadeo 1s infinite;
+}
+
+.timer {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 18px 0;
+  text-align: center;
+}
+
+.acciones {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.acciones button {
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: #d9a441;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+@keyframes parpadeo {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.01); opacity: 0.86; }
+  100% { transform: scale(1); opacity: 1; }
+}
