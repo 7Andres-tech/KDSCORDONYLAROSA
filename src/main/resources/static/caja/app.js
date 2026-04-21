@@ -1,22 +1,31 @@
 const API_URL = "http://192.168.18.26:8080/api";
 
 let productos = [];
+let productosFiltrados = [];
 let pedido = [];
 let mostrados = new Set();
 
 let audioActivo = false;
 let audio;
 
+/* ========================= */
+/* AUDIO AUTOMÁTICO          */
+/* ========================= */
+
 document.addEventListener("click", () => {
   if (!audioActivo) {
     audio = new Audio("/audio/audionotificacion.mp3");
     audio.volume = 1;
+    audio.preload = "auto";
 
-    audio.play().then(() => {
-      audio.pause();
-      audio.currentTime = 0;
-      audioActivo = true;
-    }).catch(() => {});
+    audio.play()
+      .then(() => {
+        audio.pause();
+        audio.currentTime = 0;
+        audioActivo = true;
+        console.log("🔊 Audio caja activado");
+      })
+      .catch(() => {});
   }
 }, { once: true });
 
@@ -24,6 +33,7 @@ function reproducirSonido() {
   if (!audioActivo || !audio) return;
 
   try {
+    audio.pause();
     audio.currentTime = 0;
     audio.play().catch(() => {});
   } catch (e) {
@@ -31,35 +41,105 @@ function reproducirSonido() {
   }
 }
 
+/* ========================= */
+/* PRODUCTOS                 */
+/* ========================= */
+
 async function cargarProductos() {
   try {
     const response = await fetch(`${API_URL}/productos`);
     if (!response.ok) throw new Error("No se pudieron cargar los productos");
+
     productos = await response.json();
-    renderMenu();
+    productosFiltrados = [...productos];
+
+    cargarOpcionesCategorias();
+    renderMenu(productosFiltrados);
   } catch (error) {
-    console.error(error);
+    console.error("Error cargando productos:", error);
   }
 }
 
-function renderMenu() {
-  const menu = document.getElementById("menu-productos");
-  menu.innerHTML = "";
+function cargarOpcionesCategorias() {
+  const select = document.getElementById("filtro-categoria");
+  if (!select) return;
 
-  productos.forEach(prod => {
-    const div = document.createElement("div");
-    div.className = "producto";
-    div.onclick = () => agregar(prod.id);
+  const categorias = [...new Set(productos.map(p => p.categoria))].sort();
 
-    div.innerHTML = `
-      <img src="/${prod.imagen}" alt="${prod.nombre}">
-      <p>${prod.nombre}</p>
-      <span>S/ ${Number(prod.precio).toFixed(2)}</span>
-    `;
+  select.innerHTML = `<option value="">Todas las categorías</option>`;
 
-    menu.appendChild(div);
+  categorias.forEach(cat => {
+    const option = document.createElement("option");
+    option.value = cat;
+    option.textContent = cat;
+    select.appendChild(option);
   });
 }
+
+function aplicarFiltros() {
+  const texto = document.getElementById("buscador-productos").value.trim().toLowerCase();
+  const categoria = document.getElementById("filtro-categoria").value;
+
+  productosFiltrados = productos.filter(prod => {
+    const coincideTexto =
+      prod.nombre.toLowerCase().includes(texto) ||
+      prod.categoria.toLowerCase().includes(texto);
+
+    const coincideCategoria = categoria === "" || prod.categoria === categoria;
+
+    return coincideTexto && coincideCategoria;
+  });
+
+  renderMenu(productosFiltrados);
+}
+
+function renderMenu(listaProductos) {
+  const cont = document.getElementById("menu-productos");
+  cont.innerHTML = "";
+
+  const categorias = {};
+
+  listaProductos.forEach(prod => {
+    if (!categorias[prod.categoria]) {
+      categorias[prod.categoria] = [];
+    }
+    categorias[prod.categoria].push(prod);
+  });
+
+  Object.keys(categorias).sort().forEach(categoria => {
+    const bloque = document.createElement("div");
+    bloque.className = "bloque-categoria";
+
+    const titulo = document.createElement("h3");
+    titulo.className = "categoria-titulo";
+    titulo.textContent = categoria;
+
+    const grid = document.createElement("div");
+    grid.className = "categoria-grid";
+
+    categorias[categoria].forEach(prod => {
+      const div = document.createElement("div");
+      div.className = "producto";
+      div.onclick = () => agregar(prod.id);
+
+      div.innerHTML = `
+        <img src="/${prod.imagen}" alt="${prod.nombre}">
+        <p><strong>${prod.nombre}</strong></p>
+        <span>S/ ${Number(prod.precio).toFixed(2)}</span>
+      `;
+
+      grid.appendChild(div);
+    });
+
+    bloque.appendChild(titulo);
+    bloque.appendChild(grid);
+    cont.appendChild(bloque);
+  });
+}
+
+/* ========================= */
+/* PEDIDO ACTUAL             */
+/* ========================= */
 
 function agregar(productoId) {
   const producto = productos.find(p => p.id === productoId);
@@ -79,10 +159,10 @@ function agregar(productoId) {
     });
   }
 
-  render();
+  renderPedidoActual();
 }
 
-function render() {
+function renderPedidoActual() {
   const lista = document.getElementById("lista");
   lista.innerHTML = "";
 
@@ -118,7 +198,7 @@ function sumar(productoId) {
   const item = pedido.find(i => i.productoId === productoId);
   if (!item) return;
   item.cantidad += 1;
-  render();
+  renderPedidoActual();
 }
 
 function restar(productoId) {
@@ -131,7 +211,7 @@ function restar(productoId) {
     pedido = pedido.filter(i => i.productoId !== productoId);
   }
 
-  render();
+  renderPedidoActual();
 }
 
 async function enviarPedido() {
@@ -158,7 +238,7 @@ async function enviarPedido() {
 
     const pedidoCreado = await response.json();
     pedido = [];
-    render();
+    renderPedidoActual();
 
     alert(`Pedido #${pedidoCreado.id} enviado correctamente`);
   } catch (error) {
@@ -166,6 +246,10 @@ async function enviarPedido() {
     alert("Hubo un error al enviar el pedido");
   }
 }
+
+/* ========================= */
+/* PEDIDOS LISTOS            */
+/* ========================= */
 
 async function cargarPedidosListos() {
   try {
@@ -243,6 +327,10 @@ function mostrarModal(pedido) {
   document.body.appendChild(modal);
 }
 
+/* ========================= */
+/* LOGOUT                    */
+/* ========================= */
+
 async function cerrarSesionCaja() {
   try {
     const response = await fetch(`${API_URL}/pedidos/logout-check/caja`);
@@ -263,9 +351,13 @@ async function cerrarSesionCaja() {
   }
 }
 
+/* ========================= */
+/* INICIO                    */
+/* ========================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   cargarProductos();
-  render();
+  renderPedidoActual();
   cargarPedidosListos();
-  setInterval(cargarPedidosListos, 3000);
+  setInterval(cargarPedidosListos, 5000);
 });

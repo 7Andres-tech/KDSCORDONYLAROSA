@@ -12,25 +12,49 @@
   <div class="page">
     <div class="topbar">
       <h1>🧾 Caja</h1>
-      <button class="logout-btn" onclick="cerrarSesionCaja()">Cerrar sesión</button>
+      <div class="topbar-actions">
+        <button class="logout-btn" onclick="cerrarSesionCaja()">Cerrar sesión</button>
+      </div>
     </div>
 
-    <section>
-      <h2>Menú</h2>
-      <div class="menu" id="menu-productos"></div>
-    </section>
+    <div class="caja-layout">
+      <!-- IZQUIERDA: MENÚ -->
+      <section class="menu-panel">
+        <div class="menu-header">
+          <h2>Menú</h2>
 
-    <section>
-      <h2>Pedido actual</h2>
-      <ul id="lista" class="pedido-lista"></ul>
-      <p class="total-texto">Total: S/ <span id="total">0.00</span></p>
-      <button class="enviar" onclick="enviarPedido()">Enviar</button>
-    </section>
+          <div class="filtros-menu">
+            <input
+              type="text"
+              id="buscador-productos"
+              placeholder="Buscar plato..."
+              oninput="aplicarFiltros()"
+            >
 
-    <section>
-      <h2>Pedidos Listos</h2>
-      <div id="listos" class="listos-grid"></div>
-    </section>
+            <select id="filtro-categoria" onchange="aplicarFiltros()">
+              <option value="">Todas las categorías</option>
+            </select>
+          </div>
+        </div>
+
+        <div id="menu-productos" class="menu-categorias"></div>
+      </section>
+
+      <!-- DERECHA: PEDIDO -->
+      <aside class="pedido-panel">
+        <section class="pedido-actual-box">
+          <h2>Pedido actual</h2>
+          <ul id="lista" class="pedido-lista"></ul>
+          <p class="total-texto">Total: S/ <span id="total">0.00</span></p>
+          <button class="enviar" onclick="enviarPedido()">Enviar</button>
+        </section>
+
+        <section class="pedidos-listos-box">
+          <h2>Pedidos listos</h2>
+          <div id="listos" class="listos-grid"></div>
+        </section>
+      </aside>
+    </div>
   </div>
 
   <script src="app.js"></script>
