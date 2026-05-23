@@ -10,11 +10,28 @@
 </head>
 <body>
 
-  <div class="page">
-    <div class="topbar">
-      <h1>🍳 KDS Cocina</h1>
-      <button class="logout-btn" onclick="cerrarSesionCocina()">Cerrar sesión</button>
+  <header class="topbar-kds">
+
+    <div class="topbar-left">
+      <img src="/img/logo.png" alt="Logo" class="logo-kds">
+  
+      <div class="brand-text">
+        <h2>El Cordón y la Rosa</h2>
+        <span>Restaurante</span>
+      </div>
     </div>
+  
+    <div class="topbar-center">
+      <h1>VISTA - COCINA</h1>
+    </div>
+  
+    <div class="topbar-right">
+      <button class="logout-btn" onclick="cerrarSesionCocina()">
+        Cerrar sesión
+      </button>
+    </div>
+  
+  </header>
 
     <div id="pedidos" class="grid"></div>
   </div>

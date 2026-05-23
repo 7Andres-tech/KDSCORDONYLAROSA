@@ -19,6 +19,11 @@ public class LoginController {
 
         var authorities = auth.getAuthorities();
 
+        if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            new DefaultRedirectStrategy().sendRedirect(request, response, "/admin/index.html");
+            return;
+        }
+
         if (authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_CAJERO"))) {
             new DefaultRedirectStrategy().sendRedirect(request, response, "/caja/index.html");
             return;

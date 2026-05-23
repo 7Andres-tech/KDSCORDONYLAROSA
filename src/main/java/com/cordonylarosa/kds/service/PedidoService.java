@@ -33,6 +33,15 @@ public class PedidoService {
     public Pedido crearPedido(PedidoRequest request) {
         Pedido pedido = new Pedido();
         pedido.setEstado(EstadoPedido.PENDIENTE);
+        pedido.setMetodoPago(
+        request.metodoPago() != null ? request.metodoPago() : "EFECTIVO"
+);
+
+pedido.setEstadoPago(
+        request.estadoPago() != null ? request.estadoPago() : "PAGADO"
+);
+
+pedido.setReferenciaPago(request.referenciaPago());
 
         BigDecimal total = BigDecimal.ZERO;
 

@@ -43,12 +43,22 @@ public class SecurityConfig {
                                 "/img/**",
                                 "/audio/**",
                                 "/manifest.json",
-                                "/sw.js"
+                                "/sw.js",
+                                "/api/reportes/descargar/**"
                         ).permitAll()
+    
                         .requestMatchers("/caja/**").hasRole("CAJERO")
                         .requestMatchers("/cocina/**").hasRole("COCINERO")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+    
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/reportes/**").hasAnyRole("CAJERO", "ADMIN")
+                        .requestMatchers("/api/pagos/**").hasAnyRole("CAJERO", "ADMIN")
+    
                         .requestMatchers("/api/productos/**").authenticated()
                         .requestMatchers("/api/pedidos/**").authenticated()
+                        .requestMatchers("/api/reportes/descargar/**").permitAll()
+    
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -63,7 +73,7 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login/index.html?logout=true")
                 )
                 .httpBasic(Customizer.withDefaults());
-
+    
         return http.build();
     }
 }

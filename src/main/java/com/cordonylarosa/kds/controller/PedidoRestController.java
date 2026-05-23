@@ -32,13 +32,15 @@ public class PedidoRestController {
     }
 
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<?> cambiarEstado(@PathVariable Long id,
-                                           @RequestBody EstadoPedidoRequest request) {
+    public ResponseEntity<?> cambiarEstado(
+            @PathVariable("id") Long id,
+            @RequestBody EstadoPedidoRequest request
+    ) {
         try {
             Pedido pedido = pedidoService.cambiarEstado(id, request.estado());
             return ResponseEntity.ok(pedido);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(Map.of(
+            return ResponseEntity.badRequest().body(Map.of(
                     "error", e.getMessage(),
                     "id", id,
                     "estadoRecibido", request.estado()
@@ -47,8 +49,16 @@ public class PedidoRestController {
     }
 
     @PatchMapping("/{id}/entregar")
-    public Pedido entregar(@PathVariable Long id) {
-        return pedidoService.marcarEntregado(id);
+    public ResponseEntity<?> entregar(@PathVariable("id") Long id) {
+        try {
+            Pedido pedido = pedidoService.marcarEntregado(id);
+            return ResponseEntity.ok(pedido);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", e.getMessage(),
+                    "id", id
+            ));
+        }
     }
 
     @GetMapping("/logout-check/caja")

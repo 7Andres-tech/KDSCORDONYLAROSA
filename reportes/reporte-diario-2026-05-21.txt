@@ -1,0 +1,18 @@
+REPORTE DIARIO DE VENTAS
+El Cordón y la Rosa
+Fecha: 2026-05-21
+
+Ventas totales: S/ 982.00
+Pedidos completados: 43
+Ticket promedio: S/ 22.84
+
+PEDIDOS POR ESTADO
+LISTO: 2
+ENTREGADO: 43
+
+PLATOS MÁS VENDIDOS
+Fettuccini en salsa de langostinos | Cantidad: 10 | Ventas: S/ 280.00
+Chicharron de pollo | Cantidad: 6 | Ventas: S/ 120.00
+Ensalada Mixta | Cantidad: 6 | Ventas: S/ 48.00
+Choritos a la chalaca | Cantidad: 4 | Ventas: S/ 48.00
+Tallarin saltado de pollo/carne | Cantidad: 3 | Ventas: S/ 54.00

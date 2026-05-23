@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - KDS</title>
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<header class="header">
+    <div>
+        <h1>Dashboard Administrador</h1>
+        <p>El Cordón y la Rosa - Sistema KDS</p>
+    </div>
+    <form action="/logout" method="post">
+        <button class="btn-logout">Cerrar sesión</button>
+    </form>
+</header>
+
+<main class="container">
+
+    <section class="filtros-fecha">
+        <div>
+            <label>Fecha inicio</label>
+            <input type="date" id="fechaInicioAdmin">
+        </div>
+        <div>
+            <label>Fecha fin</label>
+            <input type="date" id="fechaFinAdmin">
+        </div>
+        <button id="btnFiltrarAdmin">Filtrar dashboard</button>
+        <button id="btnHoyAdmin">Ver hoy</button>
+    </section>
+
+    <section class="cards">
+        <div class="card">
+            <h3>Ventas Totales</h3>
+            <p id="ventasTotales">S/ 0.00</p>
+        </div>
+        <div class="card">
+            <h3>Pedidos Completados</h3>
+            <p id="pedidosCompletados">0</p>
+        </div>
+        <div class="card">
+            <h3>Ticket Promedio</h3>
+            <p id="ticketPromedio">S/ 0.00</p>
+        </div>
+    </section>
+
+    <section class="grid-graficos">
+        <div class="panel">
+            <h2>Ventas por Hora</h2>
+            <canvas id="graficoVentasHora"></canvas>
+        </div>
+
+        <div class="panel">
+            <h2>Pedidos por Estado</h2>
+            <canvas id="graficoEstados"></canvas>
+        </div>
+    </section>
+
+    <section class="panel">
+        <h2>Platos Más Vendidos</h2>
+        <canvas id="graficoPlatos"></canvas>
+    </section>
+
+    <section class="panel">
+        <h2>Gestión de Usuarios</h2>
+
+        <form id="formUsuario" class="form-usuario">
+            <input type="hidden" id="usuarioId">
+
+            <input type="text" id="username" placeholder="Usuario" required>
+            <input type="password" id="password" placeholder="Contraseña">
+
+            <select id="rol" required>
+                <option value="ROLE_ADMIN">Administrador</option>
+                <option value="ROLE_CAJERO">Cajero</option>
+                <option value="ROLE_COCINERO">Cocinero</option>
+            </select>
+
+            <select id="activo">
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+
+            <button type="submit">Guardar usuario</button>
+            <button type="button" id="btnLimpiarUsuario">Limpiar</button>
+        </form>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tablaUsuarios"></tbody>
+        </table>
+    </section>
+
+</main>
+
+<script src="admin.js"></script>
+</body>
+</html>

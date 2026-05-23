@@ -28,6 +28,15 @@ public class Pedido {
     @Column(name = "inicio_preparacion")
     private LocalDateTime inicioPreparacion;
 
+    @Column(name = "metodo_pago")
+    private String metodoPago;
+    
+    @Column(name = "estado_pago")
+    private String estadoPago;
+    
+    @Column(name = "referencia_pago")
+    private String referenciaPago;
+
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PedidoItem> items = new ArrayList<>();
 
@@ -85,5 +94,29 @@ public class Pedido {
 
     public void setItems(List<PedidoItem> items) {
         this.items = items;
+    }
+
+    public String getMetodoPago() {
+        return metodoPago;
+    }
+    
+    public void setMetodoPago(String metodoPago) {
+        this.metodoPago = metodoPago;
+    }
+    
+    public String getEstadoPago() {
+        return estadoPago;
+    }
+    
+    public void setEstadoPago(String estadoPago) {
+        this.estadoPago = estadoPago;
+    }
+    
+    public String getReferenciaPago() {
+        return referenciaPago;
+    }
+    
+    public void setReferenciaPago(String referenciaPago) {
+        this.referenciaPago = referenciaPago;
     }
 }
