@@ -411,3 +411,100 @@ function mostrarNotificacion() {
         notificacion.classList.add("oculto");
     }, 5000);
 }
+
+async function cargarProductosAdmin() {
+    const response = await fetch("/api/productos");
+    const productos = await response.json();
+
+    const tabla = document.getElementById("tablaProductos");
+    if (!tabla) return;
+
+    tabla.innerHTML = "";
+
+    productos.forEach(p => {
+        tabla.innerHTML += `
+            <tr>
+                <td>${p.id}</td>
+                <td><img src="/${p.imagen || 'img/default.png'}" class="img-tabla"></td>
+                <td>${p.nombre}</td>
+                <td>${p.categoria || ""}</td>
+                <td>S/ ${Number(p.precio || 0).toFixed(2)}</td>
+                <td>
+                    <button onclick="editarProducto(${p.id}, '${p.nombre}', '${p.categoria}', '${p.imagen}', ${p.precio})">Editar</button>
+                    <button onclick="eliminarProducto(${p.id})">Eliminar</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function editarProducto(id, nombre, categoria, imagen, precio) {
+    document.getElementById("productoId").value = id;
+    document.getElementById("productoNombre").value = nombre;
+    document.getElementById("productoCategoria").value = categoria || "";
+    document.getElementById("productoImagen").value = imagen || "";
+    document.getElementById("productoPrecio").value = precio || 0;
+}
+
+async function eliminarProducto(id) {
+    if (!confirm("¿Eliminar producto?")) return;
+
+    await fetch(`/api/productos/${id}`, {
+        method: "DELETE"
+    });
+
+    cargarProductosAdmin();
+}
+
+function limpiarProducto() {
+    document.getElementById("productoId").value = "";
+    document.getElementById("productoNombre").value = "";
+    document.getElementById("productoPrecio").value = "";
+    document.getElementById("productoCategoria").value = "";
+    document.getElementById("productoImagen").value = "";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const formProducto = document.getElementById("formProducto");
+    const btnLimpiarProducto = document.getElementById("btnLimpiarProducto");
+
+    if (formProducto) {
+        formProducto.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById("productoId").value;
+
+            const body = {
+                nombre: document.getElementById("productoNombre").value,
+                precio: Number(document.getElementById("productoPrecio").value),
+                categoria: document.getElementById("productoCategoria").value,
+                imagen: document.getElementById("productoImagen").value
+            };
+
+            const url = id ? `/api/productos/${id}` : "/api/productos";
+            const method = id ? "PUT" : "POST";
+
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+                alert("Producto guardado correctamente");
+                limpiarProducto();
+                cargarProductosAdmin();
+            } else {
+                alert("Error al guardar producto");
+            }
+        });
+    }
+
+    if (btnLimpiarProducto) {
+        btnLimpiarProducto.addEventListener("click", limpiarProducto);
+    }
+
+    cargarProductosAdmin();
+});

@@ -208,3 +208,42 @@ td button:last-child {
     align-items: stretch;
   }
 }
+
+.form-producto {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr 1.5fr auto auto;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.form-producto input {
+  padding: 13px 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 12px;
+  font-size: 15px;
+}
+
+.form-producto button {
+  padding: 13px 18px;
+  border: none;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.form-producto button[type="submit"] {
+  background: #16a34a;
+  color: white;
+}
+
+#btnLimpiarProducto {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.img-tabla {
+  width: 60px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 10px;
+}

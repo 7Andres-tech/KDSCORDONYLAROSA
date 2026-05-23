@@ -15,7 +15,15 @@ public class ProductoService {
         this.productoRepository = productoRepository;
     }
 
-    public List<Producto> listarProductosActivos() {
-        return productoRepository.findByActivoTrueOrderByCategoriaAscNombreAsc();
+    public List<Producto> listar() {
+        return productoRepository.findAll();
+    }
+
+    public Producto guardar(Producto producto) {
+        return productoRepository.save(producto);
+    }
+
+    public void eliminar(Long id) {
+        productoRepository.deleteById(id);
     }
 }

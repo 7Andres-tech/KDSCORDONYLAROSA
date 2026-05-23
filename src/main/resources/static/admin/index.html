@@ -103,6 +103,36 @@
         </table>
     </section>
 
+    <section class="panel">
+        <h2>Gestión de Productos</h2>
+    
+        <form id="formProducto" class="form-producto">
+            <input type="hidden" id="productoId">
+    
+            <input type="text" id="productoNombre" placeholder="Nombre del producto" required>
+            <input type="number" id="productoPrecio" placeholder="Precio" step="0.01" required>
+            <input type="text" id="productoCategoria" placeholder="Categoría" required>
+            <input type="text" id="productoImagen" placeholder="Ruta imagen: img/plato.png">
+    
+            <button type="submit">Guardar producto</button>
+            <button type="button" id="btnLimpiarProducto">Limpiar</button>
+        </form>
+    
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tablaProductos"></tbody>
+        </table>
+    </section>
+
 </main>
 
 <script src="admin.js"></script>
