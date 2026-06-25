@@ -4,6 +4,7 @@ import com.cordonylarosa.kds.dto.EstadoPedidoRequest;
 import com.cordonylarosa.kds.dto.PedidoRequest;
 import com.cordonylarosa.kds.entity.Pedido;
 import com.cordonylarosa.kds.service.PedidoService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,24 +22,43 @@ public class PedidoRestController {
         this.pedidoService = pedidoService;
     }
 
-    @PostMapping
-    public Pedido crearPedido(@RequestBody PedidoRequest request) {
-        return pedidoService.crearPedido(request);
+    @PostMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Pedido> crearPedido(@RequestBody PedidoRequest request) {
+        Pedido pedido = pedidoService.crearPedido(request);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(pedido);
     }
 
-    @GetMapping
-    public List<Pedido> listarPedidos() {
-        return pedidoService.listarPedidos();
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Pedido>> listarPedidos() {
+        List<Pedido> pedidos = pedidoService.listarPedidos();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(pedidos);
     }
 
-    @PatchMapping("/{id}/estado")
+    @PatchMapping(
+            value = "/{id}/estado",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<?> cambiarEstado(
             @PathVariable("id") Long id,
             @RequestBody EstadoPedidoRequest request
     ) {
         try {
             Pedido pedido = pedidoService.cambiarEstado(id, request.estado());
-            return ResponseEntity.ok(pedido);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(pedido);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
                     "error", e.getMessage(),
@@ -48,11 +68,15 @@ public class PedidoRestController {
         }
     }
 
-    @PatchMapping("/{id}/entregar")
+    @PatchMapping(value = "/{id}/entregar", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> entregar(@PathVariable("id") Long id) {
         try {
             Pedido pedido = pedidoService.marcarEntregado(id);
-            return ResponseEntity.ok(pedido);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(pedido);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
                     "error", e.getMessage(),
@@ -61,14 +85,14 @@ public class PedidoRestController {
         }
     }
 
-    @GetMapping("/logout-check/caja")
+    @GetMapping(value = "/logout-check/caja", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> logoutCheckCaja() {
         return ResponseEntity.ok(Map.of(
                 "puedeCerrarSesion", pedidoService.puedeCerrarSesionCaja()
         ));
     }
 
-    @GetMapping("/logout-check/cocina")
+    @GetMapping(value = "/logout-check/cocina", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> logoutCheckCocina() {
         return ResponseEntity.ok(Map.of(
                 "puedeCerrarSesion", pedidoService.puedeCerrarSesionCocina()

@@ -87,6 +87,17 @@ pedido.setReferenciaPago(request.referenciaPago());
         return pedidos;
     }
 
+    public Pedido marcarPagoAprobado(Long pedidoId, String referenciaPago) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con id: " + pedidoId));
+    
+        pedido.setEstadoPago("PAGADO");
+        pedido.setMetodoPago("MERCADO_PAGO");
+        pedido.setReferenciaPago(referenciaPago);
+    
+        return pedidoRepository.save(pedido);
+    }
+
     @Transactional
     public Pedido cambiarEstado(Long id, String estadoTexto) {
         Pedido pedido = pedidoRepository.findById(id)

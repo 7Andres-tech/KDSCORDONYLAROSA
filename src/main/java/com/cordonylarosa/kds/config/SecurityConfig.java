@@ -3,7 +3,9 @@ package com.cordonylarosa.kds.config;
 import com.cordonylarosa.kds.repository.UsuarioRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
@@ -33,10 +35,20 @@ public class SecurityConfig {
     }
 
     @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
+
+                        // ===============================
+                        // RECURSOS PÚBLICOS DEL FRONTEND ANTIGUO
+                        // ===============================
                         .requestMatchers(
                                 "/login/**",
                                 "/css/**",
@@ -44,23 +56,48 @@ public class SecurityConfig {
                                 "/audio/**",
                                 "/manifest.json",
                                 "/sw.js",
-                                "/api/reportes/descargar/**"
+                                "/h2-console/**"
                         ).permitAll()
-    
+
+                        // ===============================
+                        // LOGIN ANGULAR
+                        // ===============================
+                        .requestMatchers(
+                                "/api/auth/**"
+                        ).permitAll()
+
+                        // ===============================
+                        // APIs USADAS POR ANGULAR
+                        // ===============================
+                        .requestMatchers(
+                                "/api/productos/**",
+                                "/api/pedidos/**",
+                                "/api/pagos/**",
+                                "/api/reportes/**"
+                        ).permitAll()
+
+                        // ===============================
+                        // APIs DEL ADMIN
+                        // Por ahora permitidas para que Angular Admin funcione
+                        // Luego se pueden proteger con ROLE_ADMIN
+                        // ===============================
+                        .requestMatchers(
+                                "/api/admin/**"
+                        ).permitAll()
+
+                        // ===============================
+                        // VISTAS ANTIGUAS PROTEGIDAS POR ROL
+                        // ===============================
                         .requestMatchers("/caja/**").hasRole("CAJERO")
                         .requestMatchers("/cocina/**").hasRole("COCINERO")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-    
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/reportes/**").hasAnyRole("CAJERO", "ADMIN")
-                        .requestMatchers("/api/pagos/**").hasAnyRole("CAJERO", "ADMIN")
-    
-                        .requestMatchers("/api/productos/**").authenticated()
-                        .requestMatchers("/api/pedidos/**").authenticated()
-                        .requestMatchers("/api/reportes/descargar/**").permitAll()
-    
+
+                        // ===============================
+                        // CUALQUIER OTRA RUTA REQUIERE LOGIN
+                        // ===============================
                         .anyRequest().authenticated()
                 )
+
                 .formLogin(form -> form
                         .loginPage("/login/index.html")
                         .loginProcessingUrl("/login")
@@ -68,12 +105,15 @@ public class SecurityConfig {
                         .failureUrl("/login/index.html?error=true")
                         .permitAll()
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login/index.html?logout=true")
+                        .permitAll()
                 )
+
                 .httpBasic(Customizer.withDefaults());
-    
+
         return http.build();
     }
 }
