@@ -1,0 +1,195 @@
+<div class="page">
+
+  <header class="topbar-kds">
+    <div class="topbar-left">
+      <img src="/img/logo.png" alt="Logo" class="logo-kds">
+
+      <div class="brand-text">
+        <h2>El Cordón y la Rosa</h2>
+        <span>Restaurante</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <h1>VISTA - CAJA</h1>
+    </div>
+
+    <div class="topbar-right">
+      <button class="logout-btn" type="button" (click)="cerrarSesionCaja()">
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
+
+  <div class="reporte-filtros">
+    <input type="date" [(ngModel)]="fechaInicioReporte">
+    <input type="date" [(ngModel)]="fechaFinReporte">
+
+    <button
+      type="button"
+      class="btn-whatsapp"
+      [disabled]="enviandoReporte"
+      (click)="enviarReporteAdministrador()"
+    >
+      {{ enviandoReporte ? 'Enviando reporte...' : '🟢 Enviar reporte al administrador' }}
+    </button>
+  </div>
+
+  <div class="caja-layout">
+
+    <section class="menu-panel">
+      <div class="menu-header">
+        <h2>Menú</h2>
+
+        <div class="filtros-menu">
+          <input
+            type="text"
+            placeholder="Buscar plato..."
+            [(ngModel)]="textoBusqueda"
+            (input)="aplicarFiltros()"
+          >
+
+          <select [(ngModel)]="categoriaSeleccionada" (change)="aplicarFiltros()">
+            <option value="">Todas las categorías</option>
+            <option *ngFor="let categoria of categorias" [value]="categoria">
+              {{ categoria }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="menu-categorias">
+
+        <p *ngIf="cargandoProductos">Cargando productos...</p>
+
+        <p *ngIf="!cargandoProductos && categoriasAgrupadas.length === 0">
+          No hay productos disponibles.
+        </p>
+
+        <div
+          class="bloque-categoria"
+          *ngFor="let bloque of categoriasAgrupadas"
+        >
+          <h3 class="categoria-titulo">{{ bloque.categoria }}</h3>
+
+          <div class="categoria-grid">
+            <div
+              class="producto"
+              *ngFor="let producto of bloque.productos"
+              (click)="agregar(producto.id)"
+            >
+              <img [src]="obtenerImagen(producto.imagen)" [alt]="producto.nombre">
+
+              <div>
+                <p><strong>{{ producto.nombre }}</strong></p>
+                <span>S/ {{ producto.precio | number:'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <aside class="pedido-panel">
+
+      <section class="pedido-actual-box">
+        <h2>Pedido actual</h2>
+
+        <ul class="pedido-lista">
+          <li class="pedido-vacio" *ngIf="pedido.length === 0">
+            No hay items en el pedido
+          </li>
+
+          <li class="pedido-item" *ngFor="let item of pedido">
+            <img [src]="obtenerImagen(item.img)" [alt]="item.nombre">
+
+            <div class="pedido-item-info">
+              <strong>{{ item.nombre }}</strong>
+              <span>Cantidad: {{ item.cantidad }}</span>
+              <span>S/ {{ item.precio * item.cantidad | number:'1.2-2' }}</span>
+            </div>
+
+            <div class="acciones-item">
+              <button type="button" (click)="sumar(item.productoId)">+</button>
+              <button type="button" (click)="restar(item.productoId)">-</button>
+            </div>
+          </li>
+        </ul>
+
+        <p class="total-texto">
+          Total: S/ <span>{{ totalPedido | number:'1.2-2' }}</span>
+        </p>
+
+        <div class="metodo-pago">
+          <label class="mp-option">
+            <input
+              type="radio"
+              name="metodoPago"
+              value="MERCADO_PAGO"
+              checked
+            >
+
+            <img
+              src="https://http2.mlstatic.com/frontend-assets/mp-web-navigation/ui-navigation/5.22.8/mercadopago/logo__large_plus.png"
+              alt="Mercado Pago"
+            >
+
+            <span>Pago Online</span>
+          </label>
+        </div>
+
+        <button class="enviar" type="button" (click)="enviarPedido()">
+          Enviar
+        </button>
+      </section>
+
+      <section class="pedidos-listos-box">
+        <h2>Pedidos listos</h2>
+
+        <div class="listos-grid">
+          <p *ngIf="pedidosListos.length === 0">
+            No hay pedidos listos.
+          </p>
+
+          <div class="card listo" *ngFor="let pedidoListo of pedidosListos">
+            <h3>#{{ pedidoListo.id }}</h3>
+
+            <div class="item" *ngFor="let item of pedidoListo.items">
+              <img [src]="obtenerImagen(item.imagen)" [alt]="item.nombreProducto">
+              <span>{{ item.nombreProducto }} x{{ item.cantidad }}</span>
+            </div>
+
+            <p>Total: S/ {{ pedidoListo.total | number:'1.2-2' }}</p>
+
+            <button
+              class="btn-entregado"
+              type="button"
+              (click)="marcarEntregado(pedidoListo.id)"
+            >
+              Pedido entregado
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </aside>
+  </div>
+</div>
+
+<div class="modal" *ngIf="modalPedidoListo">
+  <div class="modal-content">
+    <h2>Pedido #{{ modalPedidoListo.id }} listo</h2>
+
+    <div class="item" *ngFor="let item of modalPedidoListo.items">
+      <img [src]="obtenerImagen(item.imagen)" [alt]="item.nombreProducto">
+      <span>{{ item.nombreProducto }} x{{ item.cantidad }}</span>
+    </div>
+
+    <p>Total: S/ {{ modalPedidoListo.total | number:'1.2-2' }}</p>
+
+    <button type="button" (click)="modalPedidoListo = null">
+      Aceptar
+    </button>
+  </div>
+</div>

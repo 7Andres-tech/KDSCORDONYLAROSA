@@ -1,0 +1,121 @@
+<div class="page">
+
+  <header class="topbar-kds">
+    <div class="topbar-left">
+      <img src="/img/logo.png" alt="Logo" class="logo-kds">
+
+      <div class="brand-text">
+        <h2>El Cordón y la Rosa</h2>
+        <span>Restaurante</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <h1>VISTA - COCINA</h1>
+    </div>
+
+    <div class="topbar-right">
+      <button class="logout-btn" type="button" (click)="cerrarSesionCocina()">
+        Cerrar sesión
+      </button>
+    </div>
+  </header>
+
+  <main class="cocina-container">
+
+    <section class="cocina-header">
+      <div>
+        <h2>Pedidos en cocina</h2>
+        <p>Gestiona los pedidos pendientes, en preparación y listos.</p>
+      </div>
+
+      <button class="btn-actualizar" type="button" (click)="cargarPedidos()">
+        Actualizar
+      </button>
+    </section>
+
+    <section class="resumen-estados">
+      <div class="resumen-card pendiente">
+        <span>Pendientes</span>
+        <strong>{{ contarPorEstado('PENDIENTE') }}</strong>
+      </div>
+
+      <div class="resumen-card preparacion">
+        <span>En preparación</span>
+        <strong>{{ contarPorEstado('EN_PREPARACION') }}</strong>
+      </div>
+
+      <div class="resumen-card listo">
+        <span>Listos</span>
+        <strong>{{ contarPorEstado('LISTO') }}</strong>
+      </div>
+    </section>
+
+    <p class="mensaje-vacio" *ngIf="!cargando && pedidos.length === 0">
+      No hay pedidos pendientes en cocina.
+    </p>
+
+    <p class="mensaje-cargando" *ngIf="cargando">
+      Cargando pedidos...
+    </p>
+
+    <section class="pedidos-grid">
+      <article
+        class="pedido-card"
+        *ngFor="let pedido of pedidos"
+        [ngClass]="pedido.estado"
+      >
+        <div class="pedido-card-header">
+          <div>
+            <h3>Pedido #{{ pedido.id }}</h3>
+            <span class="estado-badge">{{ formatearEstado(pedido.estado) }}</span>
+          </div>
+
+          <div class="tiempo">
+            {{ calcularTiempo(pedido.createdAt) }}
+          </div>
+        </div>
+
+        <div class="pedido-items">
+          <div class="pedido-item" *ngFor="let item of pedido.items">
+            <img [src]="obtenerImagen(item.imagen)" [alt]="item.nombreProducto">
+
+            <div>
+              <strong>{{ item.nombreProducto }}</strong>
+              <span>Cantidad: {{ item.cantidad }}</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="total">
+          Total: S/ {{ pedido.total | number:'1.2-2' }}
+        </p>
+
+        <div class="acciones">
+          <button
+            type="button"
+            class="btn-preparar"
+            *ngIf="pedido.estado === 'PENDIENTE'"
+            (click)="cambiarEstado(pedido.id, 'EN_PREPARACION')"
+          >
+            Preparar
+          </button>
+
+          <button
+            type="button"
+            class="btn-listo"
+            *ngIf="pedido.estado === 'EN_PREPARACION'"
+            (click)="cambiarEstado(pedido.id, 'LISTO')"
+          >
+            Marcar listo
+          </button>
+
+          <span class="listo-texto" *ngIf="pedido.estado === 'LISTO'">
+            Pedido listo para entregar
+          </span>
+        </div>
+      </article>
+    </section>
+
+  </main>
+</div>

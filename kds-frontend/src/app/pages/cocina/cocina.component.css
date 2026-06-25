@@ -1,0 +1,428 @@
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+  min-height: 100vh;
+  background: #f4eee5;
+  color: #071426;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.page {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* HEADER */
+
+.topbar-kds {
+  width: 100%;
+  min-height: 115px;
+  padding: 20px 42px;
+  margin: 0 0 36px 0;
+
+  display: grid;
+  grid-template-columns: 320px 1fr 320px;
+  align-items: center;
+
+  background: linear-gradient(135deg, #3f641d, #6f8f2d, #8ea94a);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-width: 0;
+}
+
+.logo-kds {
+  width: 78px;
+  height: 78px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brand-text h2 {
+  margin: 0;
+  color: white;
+  font-size: 28px;
+  line-height: 1.05;
+  font-weight: 800;
+}
+
+.brand-text span {
+  display: block;
+  margin-top: 4px;
+  color: white;
+  font-size: 14px;
+  letter-spacing: 3px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.topbar-center {
+  text-align: center;
+}
+
+.topbar-center h1 {
+  margin: 0;
+  color: white;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.topbar-right {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.logout-btn {
+  background: white;
+  color: #2f4f14;
+  border: none;
+  padding: 15px 28px;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.logout-btn:hover {
+  transform: translateY(-2px);
+  background: #f1f5f9;
+}
+
+/* CONTENIDO */
+
+.cocina-container {
+  margin: 0 34px 34px 34px;
+}
+
+.cocina-header {
+  background: #fffaf3;
+  padding: 22px;
+  border-radius: 18px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+
+.cocina-header h2 {
+  margin: 0 0 6px;
+  font-size: 30px;
+}
+
+.cocina-header p {
+  margin: 0;
+  color: #64748b;
+}
+
+.btn-actualizar {
+  background: #2e7d32;
+  color: white;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-actualizar:hover {
+  background: #256628;
+}
+
+/* RESUMEN */
+
+.resumen-estados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.resumen-card {
+  background: #fffaf3;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-left: 8px solid #94a3b8;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resumen-card span {
+  font-weight: 700;
+  color: #334155;
+}
+
+.resumen-card strong {
+  font-size: 34px;
+}
+
+.resumen-card.pendiente {
+  border-left-color: #f59e0b;
+}
+
+.resumen-card.preparacion {
+  border-left-color: #3b82f6;
+}
+
+.resumen-card.listo {
+  border-left-color: #22c55e;
+}
+
+/* PEDIDOS */
+
+.pedidos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.pedido-card {
+  background: #fffaf3;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 5px 14px rgba(0,0,0,0.1);
+  border-top: 8px solid #94a3b8;
+}
+
+.pedido-card.PENDIENTE {
+  border-top-color: #f59e0b;
+}
+
+.pedido-card.EN_PREPARACION {
+  border-top-color: #3b82f6;
+}
+
+.pedido-card.LISTO {
+  border-top-color: #22c55e;
+}
+
+.pedido-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.pedido-card h3 {
+  margin: 0 0 8px;
+  font-size: 24px;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.pedido-card.PENDIENTE .estado-badge {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.pedido-card.EN_PREPARACION .estado-badge {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.pedido-card.LISTO .estado-badge {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.tiempo {
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.pedido-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pedido-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #f8f3ec;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.pedido-item img {
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.pedido-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pedido-item span {
+  color: #64748b;
+}
+
+.total {
+  margin: 18px 0;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acciones button {
+  border: none;
+  padding: 13px;
+  border-radius: 12px;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn-preparar {
+  background: #2563eb;
+}
+
+.btn-listo {
+  background: #16a34a;
+}
+
+.listo-texto {
+  display: block;
+  background: #dcfce7;
+  color: #166534;
+  padding: 13px;
+  text-align: center;
+  border-radius: 12px;
+  font-weight: 800;
+}
+
+.mensaje-vacio,
+.mensaje-cargando {
+  background: #fffaf3;
+  padding: 18px;
+  border-radius: 14px;
+  color: #64748b;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .pedidos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .topbar-kds {
+    grid-template-columns: 280px 1fr 260px;
+  }
+
+  .topbar-center h1 {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 900px) {
+  .topbar-kds {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    text-align: center;
+    padding: 22px;
+  }
+
+  .topbar-left,
+  .topbar-right {
+    justify-content: center;
+  }
+
+  .topbar-left {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cocina-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .resumen-estados {
+    grid-template-columns: 1fr;
+  }
+
+  .pedidos-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .topbar-kds {
+    min-height: auto;
+    margin-bottom: 22px;
+    padding: 18px 14px;
+  }
+
+  .logo-kds {
+    width: 64px;
+    height: 64px;
+  }
+
+  .brand-text h2 {
+    font-size: 21px;
+  }
+
+  .brand-text span {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+
+  .topbar-center h1 {
+    font-size: 26px;
+    letter-spacing: 1px;
+  }
+
+  .logout-btn,
+  .btn-actualizar {
+    width: 100%;
+  }
+
+  .cocina-container {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .pedido-card-header {
+    flex-direction: column;
+  }
+
+  .tiempo {
+    white-space: normal;
+  }
+}

@@ -1,0 +1,42 @@
+<div class="login-page">
+
+  <div class="login-box">
+    <div class="logo-box">
+      <img src="/img/logo.png" alt="Logo">
+    </div>
+
+    <h1>Iniciar sesión</h1>
+    <p class="subtitle">Sistema KDS - El Cordón y la Rosa</p>
+
+    <div class="msg error" *ngIf="mensajeError">
+      {{ mensajeError }}
+    </div>
+
+    <div class="msg ok" *ngIf="mensajeOk">
+      {{ mensajeOk }}
+    </div>
+
+    <form (ngSubmit)="iniciarSesion()">
+      <input
+        type="text"
+        name="username"
+        placeholder="Usuario"
+        [(ngModel)]="username"
+        required
+      >
+
+      <input
+        type="password"
+        name="password"
+        placeholder="Contraseña"
+        [(ngModel)]="password"
+        required
+      >
+
+      <button type="submit" [disabled]="cargando">
+        {{ cargando ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </div>
+
+</div>

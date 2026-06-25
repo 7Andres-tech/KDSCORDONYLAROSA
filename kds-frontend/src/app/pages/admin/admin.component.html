@@ -1,0 +1,223 @@
+<header class="header">
+  <div>
+    <h1>Dashboard Administrador</h1>
+    <p>El Cordón y la Rosa - Sistema KDS</p>
+  </div>
+
+  <button class="btn-logout" type="button" (click)="cerrarSesion()">
+    Cerrar sesión
+  </button>
+</header>
+
+<div class="notificacion" *ngIf="mostrarNotificacion">
+  Nuevo reporte recibido por WhatsApp
+</div>
+
+<main class="container">
+
+  <section class="filtros-fecha">
+    <div>
+      <label>Fecha inicio</label>
+      <input type="date" [(ngModel)]="fechaInicioAdmin">
+    </div>
+
+    <div>
+      <label>Fecha fin</label>
+      <input type="date" [(ngModel)]="fechaFinAdmin">
+    </div>
+
+    <button id="btnFiltrarAdmin" type="button" (click)="filtrarDashboard()">
+      Filtrar dashboard
+    </button>
+
+    <button id="btnHoyAdmin" type="button" (click)="verHoy()">
+      Ver hoy
+    </button>
+  </section>
+
+  <section class="cards">
+    <div class="card">
+      <h3>Ventas Totales</h3>
+      <p>S/ {{ ventasTotales | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Pedidos Completados</h3>
+      <p>{{ pedidosCompletados }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Ticket Promedio</h3>
+      <p>S/ {{ ticketPromedio | number:'1.2-2' }}</p>
+    </div>
+  </section>
+
+  <section class="grid-graficos">
+    <div class="panel">
+      <h2>Ventas por Hora</h2>
+      <canvas #graficoVentasHora></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>Pedidos por Estado</h2>
+      <canvas #graficoEstados></canvas>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Platos Más Vendidos</h2>
+    <canvas #graficoPlatos></canvas>
+  </section>
+
+  <section class="panel">
+    <h2>Gestión de Usuarios</h2>
+
+    <form class="form-usuario" (ngSubmit)="guardarUsuario()">
+      <input type="hidden" [(ngModel)]="usuarioForm.id" name="usuarioId">
+
+      <input
+        type="text"
+        placeholder="Usuario"
+        [(ngModel)]="usuarioForm.username"
+        name="username"
+        required
+      >
+
+      <input
+        type="password"
+        placeholder="Contraseña"
+        [(ngModel)]="usuarioForm.password"
+        name="password"
+      >
+
+      <select [(ngModel)]="usuarioForm.rol" name="rol" required>
+        <option value="ROLE_ADMIN">Administrador</option>
+        <option value="ROLE_CAJERO">Cajero</option>
+        <option value="ROLE_COCINERO">Cocinero</option>
+      </select>
+
+      <select [(ngModel)]="usuarioForm.activo" name="activo">
+        <option [ngValue]="true">Activo</option>
+        <option [ngValue]="false">Inactivo</option>
+      </select>
+
+      <button type="submit">Guardar usuario</button>
+      <button type="button" id="btnLimpiarUsuario" (click)="limpiarFormularioUsuario()">
+        Limpiar
+      </button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Rol</th>
+          <th>Activo</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let usuario of usuarios">
+          <td>{{ usuario.id }}</td>
+          <td>{{ usuario.username }}</td>
+          <td>{{ usuario.rol }}</td>
+          <td>{{ usuario.activo ? 'Sí' : 'No' }}</td>
+          <td>
+            <button type="button" (click)="editarUsuario(usuario)">Editar</button>
+            <button type="button" (click)="eliminarUsuario(usuario.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Gestión de Productos</h2>
+
+    <form class="form-producto" (ngSubmit)="guardarProducto()">
+      <input type="hidden" [(ngModel)]="productoForm.id" name="productoId">
+
+      <input
+        type="text"
+        placeholder="Nombre del producto"
+        [(ngModel)]="productoForm.nombre"
+        name="productoNombre"
+        required
+      >
+
+      <input
+        type="number"
+        placeholder="Precio"
+        step="0.01"
+        [(ngModel)]="productoForm.precio"
+        name="productoPrecio"
+        required
+      >
+
+      <input
+        type="text"
+        placeholder="Categoría"
+        [(ngModel)]="productoForm.categoria"
+        name="productoCategoria"
+        required
+      >
+
+      <input
+        type="text"
+        placeholder="Ruta imagen: img/plato.png"
+        [(ngModel)]="productoForm.imagen"
+        name="productoImagen"
+      >
+
+      <button type="submit">Guardar producto</button>
+      <button type="button" id="btnLimpiarProducto" (click)="limpiarProducto()">
+        Limpiar
+      </button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Imagen</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let producto of productos">
+          <td>{{ producto.id }}</td>
+          <td>
+            <img [src]="obtenerImagen(producto.imagen)" class="img-tabla" alt="Producto">
+          </td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.categoria }}</td>
+          <td>S/ {{ producto.precio | number:'1.2-2' }}</td>
+          <td>
+            <button type="button" (click)="editarProducto(producto)">Editar</button>
+            <button type="button" (click)="eliminarProducto(producto.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="panel">
+    <h2>Notificaciones</h2>
+
+    <div *ngIf="notificaciones.length === 0">
+      No hay notificaciones.
+    </div>
+
+    <div class="notificacion-item" *ngFor="let n of notificaciones">
+      <strong>{{ n.mensaje }}</strong><br>
+      <small>{{ n.createdAt | date:'short' }}</small>
+    </div>
+  </section>
+
+</main>
